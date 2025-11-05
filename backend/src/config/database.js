@@ -1,8 +1,19 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
-const url = process.env.MONGO_URI;
+
 const connectDB = async () => {
-  await mongoose.connect(url);
+  try {
+    if (mongoose.connection.readyState >= 1) {
+      console.log("⚡ Using existing database connection");
+      return;
+    }
+
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("✅ MongoDB connected successfully");
+  } catch (err) {
+    console.error("❌ MongoDB connection error:", err);
+    throw err;
+  }
 };
 
 module.exports = connectDB;
