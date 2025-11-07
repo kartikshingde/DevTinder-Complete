@@ -6,19 +6,31 @@ const userAuth = async (req, res, next) => {
     const { token } = req.cookies;
 
     if (!token) {
-      return res.status(401).send("Please Login!");
+      return res.status(401).json({ 
+        error: "Authentication required",
+        message: "Please Login!" 
+      });
     }
+
     const decodedObj = await jwt.verify(token, "dont@writeByYourself#");
     const { _id } = decodedObj;
 
     const user = await User.findById(_id);
-    // console.log(user)
+    
+    if (!user) {
+      return res.status(401).json({ 
+        error: "User not found",
+        message: "Please Login again!" 
+      });
+    }
 
     req.user = user;
-
     next();
   } catch (err) {
-    res.status(404).send("ERROR: " + err.message);
+    res.status(401).json({ 
+      error: "Authentication failed",
+      message: err.message 
+    });
   }
 };
 

@@ -9,9 +9,10 @@ const app = express();
 // Middlewares
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    origin: "http://localhost:5173", // ✅ Your exact frontend URL
+    credentials: true, // ✅ Critical for cookies
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
