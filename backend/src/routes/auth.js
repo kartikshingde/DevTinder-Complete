@@ -6,6 +6,17 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 
+const isProduction = process.env.NODE_ENV === "production";
+
+// Cookie configuration based on environment
+const getCookieOptions = () => ({
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
+  maxAge: 8 * 3600000,
+  path: "/",
+});
+
 authRouter.post("/signup", async (req, res) => {
   try {
     // validate user
@@ -26,11 +37,7 @@ authRouter.post("/signup", async (req, res) => {
     const savedUser = await user.save();
     const token = await savedUser.getJWT();
 
-    res.cookie("token", token, {
-        expires: new Date(Date.now() + 8 * 3600000),
-        sameSite:"none",
-        path: "/",
-      });
+    res.cookie("token", token, getCookieOptions());
 
     res.json({ message: "User Added successfully!", data: savedUser });
   } catch (err) {
@@ -56,11 +63,7 @@ authRouter.post("/login", async (req, res) => {
       const token = await user.getJWT();
 
       // Add the token to cookie and send the response back to the User
-      res.cookie("token", token, {
-        expires: new Date(Date.now() + 8 * 3600000),
-        sameSite:"none",
-        path: "/",
-      });
+      res.cookie("token", token, getCookieOptions());
 
       res.send(user);
     } else {
@@ -72,7 +75,10 @@ authRouter.post("/login", async (req, res) => {
 });
 
 authRouter.post("/logout", async (req, res) => {
-  res.cookie("token", null, { expires: new Date(Date.now()) });
+  res.cookie("token", null, {
+    ...getCookieOptions(),
+    maxAge: 0,
+  });
   res.send("LogOut Successful!!");
 });
 
