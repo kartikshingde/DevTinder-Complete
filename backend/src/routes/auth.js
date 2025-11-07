@@ -28,7 +28,6 @@ authRouter.post("/signup", async (req, res) => {
 
     res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000),
-        httpOnly: true,
         sameSite:"none",
         path: "/",
       });
@@ -59,7 +58,6 @@ authRouter.post("/login", async (req, res) => {
       // Add the token to cookie and send the response back to the User
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000),
-        httpOnly: true,
         sameSite:"none",
         path: "/",
       });
