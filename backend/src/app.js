@@ -9,8 +9,8 @@ const app = express();
 // Middlewares
 app.use(
   cors({
-    origin: "http://localhost:5173", // ✅ Your exact frontend URL
-    credentials: true, // ✅ Critical for cookies
+    origin: "http://localhost:5173",
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -37,9 +37,22 @@ app.use("/", requestRouter);
 app.use("/", userRouter);
 app.use("/", s3Router);
 
-// Connect DB
-connectDB()
-  .then(() => console.log("✅ Database connection established"))
-  .catch((err) => console.error("❌ Database connection failed:", err));
+// ✅ Connect DB and start server
+const PORT = process.env.PORT || 3000;
 
+connectDB()
+  .then(() => {
+    console.log("✅ Database connection established");
+    
+    // ✅ Start listening on port
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ Database connection failed:", err);
+    process.exit(1);
+  });
+
+// Export for testing purposes (optional)
 module.exports = app;
