@@ -1,28 +1,81 @@
-const mongoose = require("mongoose");
-require("dotenv").config();
+const express = require("express");
+const authRouter = express.Router();
 
-const connectDB = async () => {
+const { validateSignUpData } = require("../utils/validation");
+const User = require("../models/user");
+const bcrypt = require("bcrypt");
+const validator = require("validator");
+
+authRouter.post("/signup", async (req, res) => {
   try {
-    // ✅ Check if already connected
-    if (mongoose.connection.readyState >= 1) {
-      console.log("⚡ Using existing database connection");
-      return;
-    }
+    // validate user
+    validateSignUpData(req);
 
-    console.log("🔄 Connecting to MongoDB...");
+    const { firstName, lastName, email, password } = req.body;
 
-    // ✅ Add timeout options and other recommended settings
-    await mongoose.connect(process.env.MONGO_URI, {
-      serverSelectionTimeoutMS: 30000, // 30 seconds timeout
-      socketTimeoutMS: 45000,
-      bufferCommands: false, // Disable buffering for serverless
+    //Encrypt pass
+    const hashPass = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      firstName,
+      lastName,
+      email,
+      password: hashPass,
     });
 
-    console.log("✅ MongoDB connected successfully");
-  } catch (err) {
-    console.error("❌ MongoDB connection error:", err.message);
-    throw err;
-  }
-};
+    const savedUser = await user.save();
+    const token = await savedUser.getJWT();
 
-module.exports = connectDB;
+    res.cookie("token", token, {
+        expires: new Date(Date.now() + 8 * 3600000),
+        httpOnly: true,
+        
+        path: "/",
+      });
+
+    res.json({ message: "User Added successfully!", data: savedUser });
+  } catch (err) {
+    res.status(400).send("Some Error Occured " + err.message);
+  }
+});
+
+authRouter.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!validator.isEmail(email)) {
+      throw new Error("Invalid Email");
+    }
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      throw new Error("Invalid Credentials");
+    }
+    const isPasswordValid = await user.validatePassword(password);
+
+    if (isPasswordValid) {
+      // Create a jwt token
+      const token = await user.getJWT();
+
+      // Add the token to cookie and send the response back to the User
+      res.cookie("token", token, {
+        expires: new Date(Date.now() + 8 * 3600000),
+        httpOnly: true,
+        
+        path: "/",
+      });
+
+      res.send(user);
+    } else {
+      throw new Error("Invalid Credentials");
+    }
+  } catch (err) {
+    res.status(400).send("Error: " + err.message);
+  }
+});
+
+authRouter.post("/logout", async (req, res) => {
+  res.cookie("token", null, { expires: new Date(Date.now()) });
+  res.send("LogOut Successful!!");
+});
+
+module.exports = authRouter;

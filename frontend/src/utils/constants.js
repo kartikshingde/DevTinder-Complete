@@ -1,1 +1,1 @@
-export const BASE_URL="https://dev-tinder-complete.vercel.app"
+export const BASE_URL="https://devtinder-complete.onrender.com"
