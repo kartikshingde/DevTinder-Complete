@@ -29,16 +29,26 @@ const Navbar = () => {
   return (
     <>
       <div className="navbar bg-base-300 shadow-sm p-4 md:p-8 sticky top-0 z-50">
+        
         <div className="flex-1">
-          <Link to={"/"} className="btn btn-ghost text-3xl">
-            DevConnect 🎀
+          <Link 
+            to={"/"} 
+            className="btn btn-ghost normal-case text-2xl md:text-3xl"
+          >
+            <img 
+              src="/devConnect.png"
+              alt="DevConnect Logo" 
+              className="w-8 h-8 md:w-10 md:h-10 mr-2 rounded-md"
+            />
+            DevConnect
           </Link>
         </div>
+
         {!user && <p className="px-4 py-2">Welcome Guest</p>}
 
         {user && (
           <div className="flex gap-2">
-            <div className="dropdown dropdown-end flex">
+            <div className="dropdown dropdown-end flex items-center">
               <p className="px-4 py-2">
                 Welcome{" "}
                 {user ? user.firstName || user.message?.firstName : "Guest"}
@@ -47,7 +57,7 @@ const Navbar = () => {
                 tabIndex={0}
                 role="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="btn btn-ghost btn-circle avatar"
+                className="btn btn-ghost btn-circle avatar hover:bg-base-200"
               >
                 <div className="w-10 rounded-full">
                   <img
@@ -68,10 +78,17 @@ const Navbar = () => {
                   />
                 </div>
               </div>
+              {/* Simple arrow indicator */}
+              <span 
+                onClick={() => setIsOpen(!isOpen)}
+                className="text-lg cursor-pointer ml-1 hover:text-primary transition-colors"
+              >
+                ▼
+              </span>
               {isOpen && (
                 <ul
                   tabIndex={0}
-                  className="menu menu-xl dropdown-content bg-base-100 rounded-box z-1 mt-12 w-64 p-2 shadow"
+                  className="menu menu-xl dropdown-content bg-base-100 rounded-box z-[100] mt-12 w-64 p-2 shadow-lg absolute top-full right-0"
                 >
                   <li>
                     <Link
