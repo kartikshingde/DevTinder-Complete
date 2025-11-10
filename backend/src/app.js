@@ -63,6 +63,7 @@
 // authRouter.js
 const express = require("express");
 const authRouter = express.Router();
+require("dotenv").config();
 
 const { validateSignUpData } = require("./utils/validation");
 const User = require("./models/user");
