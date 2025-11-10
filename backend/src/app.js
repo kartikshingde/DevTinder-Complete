@@ -10,7 +10,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "https://scintillating-praline-d5c1f7.netlify.app",
+      "https://devconnectbykartik.netlify.app",
       "https://dev-tinder-complete-2spw.vercel.app",
     ],
     credentials: true,
