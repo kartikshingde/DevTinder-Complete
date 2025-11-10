@@ -1,3 +1,4 @@
+// authRouter.js
 const express = require("express");
 const authRouter = express.Router();
 
@@ -11,9 +12,9 @@ const isProduction = process.env.NODE_ENV === "production";
 // Cookie configuration based on environment
 const getCookieOptions = () => ({
   httpOnly: true,
-  secure: isProduction,
-  sameSite: isProduction ? "none" : "lax",
-  maxAge: 8 * 3600000,
+  secure: isProduction, // true in production
+  sameSite: isProduction ? "none" : "lax", // "none" required for cross-origin in production
+  maxAge: 8 * 3600000, // 8 hours
   path: "/",
 });
 
