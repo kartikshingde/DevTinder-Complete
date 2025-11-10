@@ -9,7 +9,10 @@ const app = express();
 // Middlewares
 app.use(
   cors({
-    origin: "https://scintillating-praline-d5c1f7.netlify.app",
+    origin: [
+      "https://scintillating-praline-d5c1f7.netlify.app",
+      "https://dev-tinder-complete-2spw.vercel.app",
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -43,7 +46,7 @@ const PORT = process.env.PORT || 3000;
 connectDB()
   .then(() => {
     console.log("✅ Database connection established");
-    
+
     // ✅ Start listening on port
     app.listen(PORT, () => {
       console.log(`🚀 Server is running on port ${PORT}`);
