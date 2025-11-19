@@ -1,4 +1,4 @@
-// authRouter.js
+// authRouter.js - Updated
 const express = require("express");
 const authRouter = express.Router();
 
@@ -7,25 +7,11 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 
-const isProduction = process.env.NODE_ENV === "production";
-
-// Cookie configuration based on environment
-const getCookieOptions = () => ({
-  httpOnly: true,
-  secure: isProduction, // true in production
-  sameSite: isProduction ? "none" : "lax", // "none" required for cross-origin in production
-  maxAge: 8 * 3600000, // 8 hours
-  path: "/",
-});
-
 authRouter.post("/signup", async (req, res) => {
   try {
-    // validate user
     validateSignUpData(req);
-
     const { firstName, lastName, email, password } = req.body;
 
-    //Encrypt pass
     const hashPass = await bcrypt.hash(password, 10);
 
     const user = new User({
@@ -38,9 +24,12 @@ authRouter.post("/signup", async (req, res) => {
     const savedUser = await user.save();
     const token = await savedUser.getJWT();
 
-    res.cookie("token", token, getCookieOptions());
-
-    res.json({ message: "User Added successfully!", data: savedUser });
+    // Remove res.cookie() - Send token in response body
+    res.json({
+      message: "User Added successfully!",
+      data: savedUser,
+      token: token, // Add token to response
+    });
   } catch (err) {
     res.status(400).send("Some Error Occured " + err.message);
   }
@@ -60,13 +49,13 @@ authRouter.post("/login", async (req, res) => {
     const isPasswordValid = await user.validatePassword(password);
 
     if (isPasswordValid) {
-      // Create a jwt token
       const token = await user.getJWT();
 
-      // Add the token to cookie and send the response back to the User
-      res.cookie("token", token, getCookieOptions());
-
-      res.send(user);
+      // Remove res.cookie() - Send token in response body
+      res.json({
+        user: user,
+        token: token, // Add token to response
+      });
     } else {
       throw new Error("Invalid Credentials");
     }
@@ -76,10 +65,7 @@ authRouter.post("/login", async (req, res) => {
 });
 
 authRouter.post("/logout", async (req, res) => {
-  res.cookie("token", null, {
-    ...getCookieOptions(),
-    maxAge: 0,
-  });
+  // No need to clear cookie - client handles localStorage
   res.send("LogOut Successful!!");
 });
 

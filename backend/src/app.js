@@ -7,17 +7,22 @@ require("dotenv").config();
 const app = express();
 
 // Middlewares
+// app.js - Simplified CORS (credentials no longer needed for localStorage)
 app.use(
   cors({
     origin: [
       "https://devconnectbykartik.netlify.app",
       "https://dev-tinder-complete-2spw.vercel.app",
+      "http://localhost:5173",
     ],
-    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    // credentials: true - No longer required for localStorage approach
   })
 );
+
+// Remove cookieParser if not used elsewhere
+// app.use(cookieParser());
 
 app.use(express.json());
 app.use(cookieParser());
@@ -59,4 +64,3 @@ connectDB()
 
 // Export for testing purposes (optional)
 module.exports = app;
-
