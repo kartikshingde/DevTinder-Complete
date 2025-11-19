@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addFeed } from "../utils/feedSlice";
 import UserCard from "./UserCard";
 import Error from "./Error";
+import axiosInstance from "../utils/axiosConfig";
 
 const Feed = () => {
   const feed = useSelector((store) => store.feed); // feed = array of users
@@ -14,9 +15,7 @@ const Feed = () => {
   // ✅ Fetch the feed data
   const getFeed = async () => {
     try {
-      const res = await axios.get(BASE_URL + "/feed", {
-        withCredentials: true,
-      });
+      const res = await axiosInstance.get(BASE_URL + "/feed", {});
 
       // ✅ Make sure we only store the array of users (not { data: [...] })
       // console.log(res)
@@ -56,9 +55,7 @@ const Feed = () => {
         <h2 className="text-2xl font-semibold text-gray-600 mb-4">
           No more users to show
         </h2>
-        <p className="text-gray-500">
-          Check back later for new connections!
-        </p>
+        <p className="text-gray-500">Check back later for new connections!</p>
       </div>
     </div>
   );

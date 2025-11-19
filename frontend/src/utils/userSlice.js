@@ -1,3 +1,4 @@
+// userSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const userSlice = createSlice({
@@ -8,11 +9,12 @@ const userSlice = createSlice({
       return action.payload;
     },
     removeUser: (state, action) => {
+      // Clear localStorage on logout
+      localStorage.removeItem("token");
       return null;
     },
   },
 });
 
-export const {addUser,removeUser}=userSlice.actions;
-
+export const { addUser, removeUser } = userSlice.actions;
 export default userSlice.reducer;

@@ -3,6 +3,7 @@ import React from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { removeUserFromFeed } from "../utils/feedSlice";
+import axiosInstance from "../utils/axiosConfig";
 
 const UserCard = ({ user }) => {
   const { _id, firstName, lastName, profileUrl, age, gender, about, skills } =
@@ -11,10 +12,9 @@ const UserCard = ({ user }) => {
 
   const handleSendRequest = async (status, userId) => {
     try {
-      const res = await axios.post(
+      const res = await axiosInstance.post(
         BASE_URL + "/request/send/" + status + "/" + userId,
-        {},
-        { withCredentials: true }
+        {}
       );
       dispatch(removeUserFromFeed(userId));
     } catch (err) {
@@ -36,7 +36,6 @@ const UserCard = ({ user }) => {
     // --- FIX: Removed min-h-[500px] to allow card to be flexible. ---
     // Added 'h-full' to ensure it plays well in a grid layout.
     <div className="w-full max-w-sm bg-gray-900 text-white rounded-xl shadow-lg overflow-hidden flex flex-col h-full">
-      
       {/* --- FIX: Reduced image height on mobile (h-48) and kept h-64 for small screens and up --- */}
       <div className="w-full h-48 sm:h-64 bg-gray-800 flex items-center justify-center">
         <img
@@ -44,7 +43,10 @@ const UserCard = ({ user }) => {
           alt={firstName + " " + lastName}
           className="w-full h-full object-contain rounded-t-xl"
           onError={(e) => {
-            if (e.target.src !== window.location.origin + "/default-avatar.svg") {
+            if (
+              e.target.src !==
+              window.location.origin + "/default-avatar.svg"
+            ) {
               e.target.src = "/default-avatar.svg";
             }
           }}
@@ -53,20 +55,31 @@ const UserCard = ({ user }) => {
 
       {/* --- FIX: Reduced padding on mobile (p-4) and margins (mt-x) --- */}
       <div className="flex flex-col flex-grow p-4 sm:p-5 overflow-auto">
-        <h2 className="text-lg sm:text-xl font-semibold">{firstName} {lastName}</h2>
-        
+        <h2 className="text-lg sm:text-xl font-semibold">
+          {firstName} {lastName}
+        </h2>
+
         {age && gender && (
-          <p className="text-sm text-gray-400 mt-1">{age} yrs • {gender}</p>
+          <p className="text-sm text-gray-400 mt-1">
+            {age} yrs • {gender}
+          </p>
         )}
-        
+
         {/* --- FIX: Reduced line-clamp on mobile to 2, and margin-top --- */}
-        <p className="text-sm text-gray-300 mt-2 sm:mt-3 line-clamp-2 sm:line-clamp-3">{about}</p>
+        <p className="text-sm text-gray-300 mt-2 sm:mt-3 line-clamp-2 sm:line-clamp-3">
+          {about}
+        </p>
 
         {normalizedSkills.length > 0 && (
           // --- FIX: Reduced margin-top ---
           <div className="flex flex-wrap gap-2 mt-3 sm:mt-4">
             {normalizedSkills.map((skill, idx) => (
-              <span key={idx} className="px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-200">{skill}</span>
+              <span
+                key={idx}
+                className="px-3 py-1 rounded-full text-xs font-medium bg-gray-800 text-gray-200"
+              >
+                {skill}
+              </span>
             ))}
           </div>
         )}

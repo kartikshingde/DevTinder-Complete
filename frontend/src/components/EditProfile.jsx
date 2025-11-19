@@ -2,15 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import imageCompression from "browser-image-compression";
-import axios from "axios";
-import { BASE_URL } from "../utils/constants";
+import axios from "axios"; // ← For S3 uploads only
 import { addUser } from "../utils/userSlice";
 import UserCard from "./UserCard";
+import axiosInstance from "../utils/axiosConfig"; // ← For backend API calls
 
 const EditProfile = () => {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -133,30 +132,27 @@ const EditProfile = () => {
     }
   };
 
+  // ✅ FIXED: Use plain axios for S3, axiosInstance for backend
   const uploadImageToS3 = async (file) => {
     try {
-      // Get upload URL from backend
-      const uploadUrlResponse = await axios.post(
-        BASE_URL + "/get-upload-url",
-        { filename: file.name },
-        { withCredentials: true }
-      );
+      // Get upload URL from YOUR backend (needs auth)
+      const uploadUrlResponse = await axiosInstance.post("/get-upload-url", {
+        filename: file.name,
+      });
 
       const { uploadUrl, key } = uploadUrlResponse.data;
 
-      // Upload file to S3
+      // Upload file to S3 (use plain axios - no auth header)
       await axios.put(uploadUrl, file, {
         headers: {
           "Content-Type": file.type,
         },
       });
 
-      // Get download URL (fix typo in backend response)
-      const downloadUrlResponse = await axios.post(
-        BASE_URL + "/get-download-url",
-        { key },
-        { withCredentials: true }
-      );
+      // Get download URL from YOUR backend (needs auth)
+      const downloadUrlResponse = await axiosInstance.post("/get-download-url", {
+        key,
+      });
 
       // Handle typo in backend response
       const downloadUrl =
@@ -249,12 +245,8 @@ const EditProfile = () => {
           .filter((skill) => skill);
       }
 
-      // Update profile
-      const response = await axios.patch(
-        BASE_URL + "/profile/edit",
-        dataToSend,
-        { withCredentials: true }
-      );
+      // ✅ FIXED: Update profile (use axiosInstance, remove BASE_URL)
+      const response = await axiosInstance.patch("/profile/edit", dataToSend);
 
       // Update Redux store
       const updatedUser =
@@ -293,7 +285,9 @@ const EditProfile = () => {
       }, 2000);
     } catch (error) {
       console.error("Error updating profile:", error);
-      setErrors({ submit: "Failed to update profile. Please try again."+error });
+      setErrors({
+        submit: "Failed to update profile. Please try again. " + error.message,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -575,14 +569,6 @@ const EditProfile = () => {
                 </p>
               </div>
 
-              {successMessage && (
-                <div className="mx-6 mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <p className="text-green-800 text-sm font-medium">
-                    {successMessage}
-                  </p>
-                </div>
-              )}
-
               {/* Submit Error */}
               {errors.submit && (
                 <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -621,9 +607,11 @@ const EditProfile = () => {
       <div className="h-full sm:mt-72 mt-10 mx-10">
         <h1>Preview of Your Card that shown to other Users</h1>
         <UserCard
-        user={{ ...formData, profileUrl: imagePreview || formData.profileUrl }}
-        
-      />
+          user={{
+            ...formData,
+            profileUrl: imagePreview || formData.profileUrl,
+          }}
+        />
       </div>
     </div>
   );

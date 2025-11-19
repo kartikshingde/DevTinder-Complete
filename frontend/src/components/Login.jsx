@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router";
 import { BASE_URL } from "../utils/constants";
+import axiosInstance from "../utils/axiosConfig";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -17,17 +18,17 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Update handlers to use axiosInstance
   const handleLogin = async () => {
     try {
-      const res = await axios.post(
-        BASE_URL + "/login",
-        {
-          email,
-          password,
-        },
-        { withCredentials: true }
-      );
-      dispatch(addUser(res.data));
+      const res = await axiosInstance.post("/login", {
+        email,
+        password,
+      });
+
+      const token = res.data.token;
+      localStorage.setItem("token", token);
+      dispatch(addUser(res.data.user));
       return navigate("/");
     } catch (err) {
       setError(err?.response?.data || "Something went wrong");
@@ -36,13 +37,15 @@ const Login = () => {
 
   const handleSignUp = async () => {
     try {
-      const res = await axios.post(
-        BASE_URL + "/signup",
-        { firstName, lastName, email, password },
-        { withCredentials: true }
-      );
-      // console.log(res.data.data);
+      const res = await axiosInstance.post("/signup", {
+        firstName,
+        lastName,
+        email,
+        password,
+      });
 
+      const token = res.data.token;
+      localStorage.setItem("token", token);
       dispatch(addUser(res.data.data));
       return navigate("/profile");
     } catch (err) {
@@ -52,24 +55,46 @@ const Login = () => {
 
   // --- SVG Icons for fields ---
   const UserIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5 text-gray-400">
-      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      className="h-5 w-5 text-gray-400"
+    >
+      <path
+        fillRule="evenodd"
+        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+        clipRule="evenodd"
+      />
     </svg>
   );
-  
+
   const MailIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5 text-gray-400">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      className="h-5 w-5 text-gray-400"
+    >
       <path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.161V6a2 2 0 00-2-2H3z" />
       <path d="M19 8.839l-7.441 3.721a.75.75 0 01-.559 0L3 8.839V14a2 2 0 002 2h10a2 2 0 002-2V8.839z" />
     </svg>
   );
 
   const LockIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5 text-gray-400">
-      <path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" />
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      className="h-5 w-5 text-gray-400"
+    >
+      <path
+        fillRule="evenodd"
+        d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
+        clipRule="evenodd"
+      />
     </svg>
   );
-
 
   return (
     // --- UPDATED THIS LINE ---
@@ -124,7 +149,7 @@ const Login = () => {
                   Last Name
                 </label>
                 <div className="relative">
-                   <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                     <UserIcon />
                   </div>
                   <input
@@ -176,7 +201,7 @@ const Login = () => {
             >
               Password
             </label>
-             <div className="relative">
+            <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <LockIcon />
               </div>
@@ -226,7 +251,7 @@ const Login = () => {
               className="text-gray-400 hover:text-indigo-400 text-lg sm:text-2xl font-medium transition duration-200 underline-offset-4 hover:underline cursor-pointer"
               onClick={() => setIsLoginForm((value) => !value)}
             >
-              <span className="text-indigo-500">❯ </span> 
+              <span className="text-indigo-500">❯ </span>
               {isLoginForm
                 ? "New user? Create an account"
                 : "Already have an account? Sign in"}

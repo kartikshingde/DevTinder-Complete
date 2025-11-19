@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
+import axiosInstance from "../utils/axiosConfig";
 
 const Navbar = () => {
   const user = useSelector((store) => store.user);
@@ -14,11 +15,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     setIsOpen(!isOpen);
     try {
-      const res = await axios.post(
-        BASE_URL + "/logout",
-        {},
-        { withCredentials: true }
-      );
+      const res = await axiosInstance.post(BASE_URL + "/logout", {});
       dispatch(removeUser());
       return navigate("/login");
     } catch (err) {
@@ -29,15 +26,14 @@ const Navbar = () => {
   return (
     <>
       <div className="navbar bg-base-300 shadow-sm p-4 md:p-8 sticky top-0 z-50">
-        
         <div className="flex-1">
-          <Link 
-            to={"/"} 
+          <Link
+            to={"/"}
             className="btn btn-ghost normal-case text-2xl md:text-3xl"
           >
-            <img 
+            <img
               src="/devConnect.png"
-              alt="DevConnect Logo" 
+              alt="DevConnect Logo"
               className="w-8 h-8 md:w-10 md:h-10 mr-2 rounded-md"
             />
             DevConnect
@@ -79,7 +75,7 @@ const Navbar = () => {
                 </div>
               </div>
               {/* Simple arrow indicator */}
-              <span 
+              <span
                 onClick={() => setIsOpen(!isOpen)}
                 className="text-lg cursor-pointer ml-1 hover:text-primary transition-colors"
               >
@@ -109,11 +105,8 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      to={"/requests"}
-                      onClick={() => setIsOpen(!isOpen)}
-                    >
-                       Requests
+                    <Link to={"/requests"} onClick={() => setIsOpen(!isOpen)}>
+                      Requests
                     </Link>
                   </li>
                   <li>
