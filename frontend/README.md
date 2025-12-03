@@ -46,3 +46,16 @@ Route= / =>Feed
 Route= /login =>Login
 Route= /connections =>Connections
 Route= /profile =>Profile
+
+# Razorpay Payment gateway Integration
+- Signed up and completed kyc and all
+- Created UI for Premium page
+- Creating an API for create order in backend
+- Added key and secret in .env
+- Initialized Razorpay in utils
+- Creating order on razorpay
+- Created Schema and model
+- Saved the order in payment colllection
+- made dynamic membership
+- add the script of the razorpay to the index.html <head>
+- use that rzp.open() in ui code

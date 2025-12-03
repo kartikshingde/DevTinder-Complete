@@ -110,6 +110,11 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
+                    <Link to={"/premium"} onClick={() => setIsOpen(!isOpen)}>
+                      Premium
+                    </Link>
+                  </li>
+                  <li>
                     <Link onClick={handleLogout}>Logout</Link>
                   </li>
                 </ul>
