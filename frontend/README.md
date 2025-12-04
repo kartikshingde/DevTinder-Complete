@@ -59,3 +59,8 @@ Route= /profile =>Profile
 - made dynamic membership
 - add the script of the razorpay to the index.html <head>
 - use that rzp.open() in ui code
+
+- Setup razorpay webhook on live api 
+- REF: https://razorpay.com/docs/payments/server-integration/nodejs/integration-steps/#integrate-with-razorpay-payment-gateway
+- ref: https://razorpay.com/docs/webhooks/validate-test/
+- ref: https://razorpay.com/docs/webhooks/payloads/payments/

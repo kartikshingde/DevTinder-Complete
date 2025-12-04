@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axiosInstance from "../utils/axiosConfig";
+import { BASE_URL } from "../utils/constants";
+import { useState } from "react";
 
 const CheckIcon = () => (
   <svg
@@ -19,6 +21,32 @@ const CheckIcon = () => (
 );
 
 const Premium = () => {
+  const [isUserPremium, setIsUserPremium] = useState(false);
+
+  // NEW: track verification so we don't flash UI while checking
+  const [verifying, setVerifying] = useState(true);
+
+  //to update premium verification on page
+  useEffect(() => {
+    // call and ensure verifying toggles off when done
+    (async () => {
+      try {
+        await verifyPremiumUser();
+      } finally {
+        setVerifying(false);
+      }
+    })();
+  }, []);
+
+  const verifyPremiumUser = async () => {
+    const res = await axiosInstance.get("premium/verify", {});
+    // console.log(res);
+
+    if (res.data.isPremium) {
+      setIsUserPremium(true);
+    }
+  };
+
   const handleBuyClick = async (type) => {
     try {
       // create order on your backend
@@ -43,6 +71,7 @@ const Premium = () => {
         theme: {
           color: "#F37254",
         },
+        handler: verifyPremiumUser,
       };
 
       const rzp = new window.Razorpay(options);
@@ -52,7 +81,46 @@ const Premium = () => {
     }
   };
 
-  return (
+  // NEW: while verifying, render a small neutral loader (prevents flash)
+  if (verifying) {
+    return (
+      <div className="w-full max-w-3xl mx-auto mt-12 p-6 flex flex-col items-center justify-center text-gray-300">
+        <svg
+          className="animate-spin h-8 w-8 text-gray-300"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v8z"
+          />
+        </svg>
+        <p className="mt-3 text-sm">Checking premium status...</p>
+      </div>
+    );
+  }
+
+  return isUserPremium ? (
+    <div
+      className="w-full max-w-md mx-auto mt-10 p-6 text-center 
+                  bg-black/60 backdrop-blur-lg border border-white/10 
+                  rounded-2xl shadow-xl text-gray-200"
+    >
+      <h2 className="text-xl font-semibold mb-1">You are a premium user 🎉 </h2>
+      <p className="text-sm text-gray-400">Explore it , Enjoy..</p>
+    </div>
+  ) : (
     <div className="w-full max-w-5xl mx-auto">
       <div className="relative bg-black/60 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
