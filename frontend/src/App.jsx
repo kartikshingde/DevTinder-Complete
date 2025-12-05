@@ -10,6 +10,7 @@ import Error from "./components/Error";
 import Connections from "./components/Connections";
 import Requests from "./components/Requests";
 import Premium from "./components/Premium";
+import Chat from "./components/Chat";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
       { path: "/connections", element: <Connections /> },
       { path: "/requests", element: <Requests /> },
       { path: "/premium", element: <Premium /> },
+      { path: "/chat/:targetUserId", element: <Chat /> },
     ],
   },
 ]);

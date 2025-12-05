@@ -4,6 +4,7 @@ import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addConnections } from "../utils/connectionSlice";
 import axiosInstance from "../utils/axiosConfig";
+import { Link } from "react-router";
 const Connections = () => {
   const connections = useSelector((store) => store.connections);
   const dispatch = useDispatch();
@@ -34,6 +35,7 @@ const Connections = () => {
       <div className="flex flex-wrap justify-center gap-6">
         {connections.map((connection, idx) => {
           const {
+            _id,
             firstName,
             lastName,
             profileUrl,
@@ -101,6 +103,9 @@ const Connections = () => {
                     ))}
                   </div>
                 )}
+                <Link to={"/chat/"+_id}>
+                  <button className="btn btn-secondary mt-4 ">Chat</button>
+                </Link>
               </div>
             </div>
           );

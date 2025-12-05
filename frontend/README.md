@@ -39,7 +39,6 @@
 - Signup New User Page
 - E2E testing
 
-
 Body
 Navbar
 Route= / =>Feed
@@ -48,19 +47,25 @@ Route= /connections =>Connections
 Route= /profile =>Profile
 
 # Razorpay Payment gateway Integration
-- Signed up and completed kyc and all
-- Created UI for Premium page
-- Creating an API for create order in backend
-- Added key and secret in .env
-- Initialized Razorpay in utils
-- Creating order on razorpay
-- Created Schema and model
-- Saved the order in payment colllection
-- made dynamic membership
-- add the script of the razorpay to the index.html <head>
-- use that rzp.open() in ui code
 
-- Setup razorpay webhook on live api 
-- REF: https://razorpay.com/docs/payments/server-integration/nodejs/integration-steps/#integrate-with-razorpay-payment-gateway
-- ref: https://razorpay.com/docs/webhooks/validate-test/
-- ref: https://razorpay.com/docs/webhooks/payloads/payments/
+    - Signed up and completed kyc and all
+    - Created UI for Premium page
+    - Creating an API for create order in backend
+    - Added key and secret in .env
+    - Initialized Razorpay in utils
+    - Creating order on razorpay
+    - Created Schema and model
+    - Saved the order in payment colllection
+    - made dynamic membership
+    - add the script of the razorpay to the index.html <head>
+    - use that rzp.open() in ui code
+
+    - Setup razorpay webhook on live api
+    - REF: https://razorpay.com/docs/payments/server-integration/nodejs/integration-steps/#integrate-with-razorpay-payment-gateway
+    - ref: https://razorpay.com/docs/webhooks/validate-test/
+    - ref: https://razorpay.com/docs/webhooks/payloads/payments/
+
+# Real time Chat using Websocket(Socker.io)
+
+    - Build the UI for chat window on /chat/:targetUserId
+    - npm i socket.io
