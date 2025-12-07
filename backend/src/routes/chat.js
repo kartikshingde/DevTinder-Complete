@@ -6,15 +6,20 @@ const chatRouter = express.Router();
 
 chatRouter.get("/chat/:targetUserId", userAuth, async (req, res) => {
   const { targetUserId } = req.params;
-  const  userId  = req.user._id;
+  const userId = req.user._id;
 
   try {
     let chat = await Chat.findOne({
       participants: { $all: [userId, targetUserId] },
-    }).populate({
-        path:"messages.senderId",
-        select:"firstName lastName"
-    });
+    })
+      .populate({
+        path: "messages.senderId",
+        select: "firstName lastName",
+      })
+      .populate({
+        path: "participants",
+        select: "firstName lastName profileUrl",
+      });
 
     if (!chat) {
       chat = new Chat({
@@ -23,10 +28,10 @@ chatRouter.get("/chat/:targetUserId", userAuth, async (req, res) => {
       });
       await chat.save();
     }
-
+    console.log(chat)
     res.json(chat);
   } catch (err) {
-    console.log("Error"+ err.message);
+    console.log("Error" + err.message);
   }
 });
 
