@@ -28,7 +28,7 @@ chatRouter.get("/chat/:targetUserId", userAuth, async (req, res) => {
       });
       await chat.save();
     }
-    console.log(chat)
+    // console.log(chat)
     res.json(chat);
   } catch (err) {
     console.log("Error" + err.message);

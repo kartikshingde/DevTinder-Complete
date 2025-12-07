@@ -27,7 +27,7 @@ const initializeSocket = (server) => {
 
     socket.on("joinChat", ({ userId, targetUserId, firstName }) => {
       const roomId = getSecretRoomId(userId, targetUserId);
-      console.log(firstName + " Joined room : " + roomId);
+      // console.log(firstName + " Joined room : " + roomId);
       socket.join(roomId);
     });
 
@@ -37,7 +37,7 @@ const initializeSocket = (server) => {
         //Save Message to the DB
         try {
           const roomId = getSecretRoomId(userId, targetUserId);
-          console.log(firstName + ": " + text);
+          // console.log(firstName + ": " + text);
 
           //Check is UserId and targetUserId are friends? like this ->
           // ConnectionRequest.findOne({

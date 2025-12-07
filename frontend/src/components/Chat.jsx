@@ -14,7 +14,7 @@ const Chat = () => {
   const [targetUser, setTargetUser] = useState(null); // Store target user info
 
   const user = useSelector((store) => store.user);
-  console.log("currentUser: ", user);
+  // console.log("currentUser: ", user);
   const userId = user?._id;
   const profileUrl = user?.profileUrl;
 
@@ -43,8 +43,7 @@ const Chat = () => {
 
     const chat = await axiosInstance.get(BASE_URL + "/chat/" + targetUserId);
 
-    console.log("All participants:", chat.data.participants);
-    console.log("Current userId:", userId);
+    
 
     const target = chat.data.participants?.find(
       (participant) => participant._id.toString() !== userId.toString()
@@ -91,7 +90,7 @@ const Chat = () => {
     });
 
     socket.on("messageReceived", ({ firstName, lastName, text }) => {
-      console.log(firstName + ": " + text);
+      // console.log(firstName + ": " + text);
       setMessages((messages) => [
         ...messages,
         { firstName, lastName, text, createdAt: new Date() },
