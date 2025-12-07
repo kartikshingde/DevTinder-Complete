@@ -69,3 +69,15 @@ Route= /profile =>Profile
 
     - Build the UI for chat window on /chat/:targetUserId
     - npm i socket.io
+    - Setup frontend socket.io-client  
+    - Initialise the chat
+    - CrateSocketConnection
+    - Listen to evnets
+
+    - to do : Improve the UI,
+    - to do : Fix security Bug - auth in Web Sockets.
+    - to do : Fix bug - If I'm not friend then I should not be able to send message.
+    - to do : Show Green Symbol when Online ??? [last Seen 2  hours ago]
+    - to do : Limit Messages when fetching from db to chat . (like pagination)
+    - Project Ideas : Tic tac toe game
+    - Project Idea 2 : Chess Game

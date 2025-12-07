@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { Await, useParams } from "react-router";
 import { Socket } from "socket.io-client";
 import { createSocketConnection } from "../utils/socket";
 import { useSelector } from "react-redux";
+import axiosInstance from "../utils/axiosConfig";
+import { BASE_URL } from "../utils/constants";
 
 const Chat = () => {
   const { targetUserId } = useParams();
@@ -13,6 +15,25 @@ const Chat = () => {
 
   const user = useSelector((store) => store.user);
   const userId = user?._id;
+
+  const fetchChatMessages = async () => {
+    const chat = await axiosInstance.get(BASE_URL + "/chat/" + targetUserId);
+    console.log(chat.data.messages);
+
+    const chatMessages = chat?.data?.messages.map((msg) => {
+      const { senderId, text } = msg;
+
+      return {
+        firstName: senderId?.firstName,
+        lastName: senderId?.lastName,
+        text: msg.text,
+      };
+    });
+    setMessages(chatMessages);
+  };
+  useEffect(() => {
+    fetchChatMessages();
+  }, []);
 
   useEffect(() => {
     if (!userId) {
@@ -26,9 +47,9 @@ const Chat = () => {
       targetUserId,
     });
 
-    socket.on("messageReceived", ({ firstName, text }) => {
+    socket.on("messageReceived", ({ firstName, lastName, text }) => {
       console.log(firstName + ": " + text);
-      setMessages((messages) => [...messages, { firstName, text }]);
+      setMessages((messages) => [...messages, { firstName, lastName, text }]);
     });
 
     return () => {
@@ -40,11 +61,12 @@ const Chat = () => {
     const socket = createSocketConnection();
     socket.emit("sendMessage", {
       firstName: user.firstName,
+      lastName: user.lastName,
       userId,
       targetUserId,
       text: newMessage,
     });
-    setNewMessage("")
+    setNewMessage("");
   };
 
   return (
@@ -53,7 +75,13 @@ const Chat = () => {
       <div className="flex-1 overflow-scroll p-5">
         {messages.map((msg, index) => {
           return (
-            <div key={index} className="chat chat-start">
+            <div
+              key={index}
+              className={
+                "chat " +
+                (user.firstName === msg.firstName ? "chat-end" : "chat-start")
+              }
+            >
               <div className="chat-image avatar">
                 <div className="w-10 rounded-full">
                   <img
@@ -63,7 +91,7 @@ const Chat = () => {
                 </div>
               </div>
               <div className="chat-header text-lg text-green-400 font-bold">
-                {msg.firstName}
+                {`${msg.firstName} ${msg.lastName}`}
                 <time className="text-xs opacity-50">12:45</time>
               </div>
               <div className="chat-bubble">{msg.text}</div>
