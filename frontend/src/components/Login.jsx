@@ -18,7 +18,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Update handlers to use axiosInstance
   const handleLogin = async () => {
     try {
       const res = await axiosInstance.post("/login", {
@@ -53,13 +52,12 @@ const Login = () => {
     }
   };
 
-  // --- SVG Icons for fields ---
   const UserIcon = () => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 20 20"
       fill="currentColor"
-      className="h-5 w-5 text-gray-400"
+      className="h-5 w-5 opacity-60"
     >
       <path
         fillRule="evenodd"
@@ -74,7 +72,7 @@ const Login = () => {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 20 20"
       fill="currentColor"
-      className="h-5 w-5 text-gray-400"
+      className="h-5 w-5 opacity-60"
     >
       <path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.161V6a2 2 0 00-2-2H3z" />
       <path d="M19 8.839l-7.441 3.721a.75.75 0 01-.559 0L3 8.839V14a2 2 0 002 2h10a2 2 0 002-2V8.839z" />
@@ -86,7 +84,7 @@ const Login = () => {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 20 20"
       fill="currentColor"
-      className="h-5 w-5 text-gray-400"
+      className="h-5 w-5 opacity-60"
     >
       <path
         fillRule="evenodd"
@@ -97,30 +95,27 @@ const Login = () => {
   );
 
   return (
-    // --- UPDATED THIS LINE ---
-    // Added 'font-mono' for a developer feel
-    <div className="font-mono flex min-h-full flex-col justify-center items-center border hover:border-indigo-500 hover:shadow-xl hover:scale-105 transition-all duration-300 sm:w-130 h-fit p-6 my-4 sm:p-8 sm:my-10 mx-auto rounded-lg">
+    <div className="font-mono flex min-h-full flex-col justify-center items-center border border-base-300 hover:border-primary hover:shadow-xl hover:scale-105 transition-all duration-300 sm:w-130 h-fit p-6 my-4 sm:p-8 sm:my-10 mx-auto rounded-lg bg-base-200">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <div className="text-center mb-4 sm:mb-8">
-          <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
+          <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent">
             {isLoginForm ? "Welcome Back" : "Create Account"}
           </h2>
-          <p className="mt-2 text-sm text-gray-400">
+          <p className="mt-2 text-sm text-base-content/70">
             {isLoginForm ? "Sign in to continue your journey" : "Join us today"}
           </p>
         </div>
       </div>
 
       <div className="mt-4 sm:mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
-        {/* --- UPDATED: Using space-y-4 for tighter mobile, sm:space-y-6 for desktop --- */}
         <div className="space-y-4 sm:space-y-6">
           {!isLoginForm && (
             <div className="grid grid-cols-2 gap-4">
-              {/* --- First Name Field (Updated with Icon) --- */}
+              {/* First Name Field */}
               <div>
                 <label
                   htmlFor="firstName"
-                  className="block text-sm font-semibold text-gray-200 mb-2"
+                  className="block text-sm font-semibold text-base-content mb-2"
                 >
                   First Name
                 </label>
@@ -135,16 +130,16 @@ const Login = () => {
                     required
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="block w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 pl-10 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 hover:bg-white/10 caret-pink-500"
+                    className="input input-bordered w-full pl-10 bg-base-100 text-base-content focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="Rahul"
                   />
                 </div>
               </div>
-              {/* --- Last Name Field (Updated with Icon) --- */}
+              {/* Last Name Field */}
               <div>
                 <label
                   htmlFor="lastName"
-                  className="block text-sm font-semibold text-gray-200 mb-2"
+                  className="block text-sm font-semibold text-base-content mb-2"
                 >
                   Last Name
                 </label>
@@ -159,7 +154,7 @@ const Login = () => {
                     required
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="block w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 pl-10 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 hover:bg-white/10 caret-pink-500"
+                    className="input input-bordered w-full pl-10 bg-base-100 text-base-content focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="Sharma"
                   />
                 </div>
@@ -167,11 +162,11 @@ const Login = () => {
             </div>
           )}
 
-          {/* --- Email Field (Updated with Icon) --- */}
+          {/* Email Field */}
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-semibold text-gray-200 mb-2"
+              className="block text-sm font-semibold text-base-content mb-2"
             >
               Email address
             </label>
@@ -187,17 +182,17 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
-                className="block w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 pl-10 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 hover:bg-white/10 caret-pink-500"
+                className="input input-bordered w-full pl-10 bg-base-100 text-base-content focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="you@example.com"
               />
             </div>
           </div>
 
-          {/* --- Password Field (Updated with Icon) --- */}
+          {/* Password Field */}
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-semibold text-gray-200 mb-2"
+              className="block text-sm font-semibold text-base-content mb-2"
             >
               Password
             </label>
@@ -212,46 +207,35 @@ const Login = () => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="block w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 pl-10 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 hover:bg-white/10 caret-pink-500"
+                className="input input-bordered w-full pl-10 bg-base-100 text-base-content focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="••••••••"
               />
             </div>
           </div>
 
           {error && (
-            <div className="rounded-lg bg-red-500/10 border border-red-500/30 px-4 py-3 backdrop-blur-sm">
-              <p className="text-red-400 text-sm font-medium text-center">
-                {error}
-              </p>
+            <div className="alert alert-error">
+              <p className="text-sm font-medium">{error}</p>
             </div>
           )}
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg shadow-indigo-500/50 hover:shadow-indigo-500/70 transform hover:scale-[1.02] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+            className="btn btn-primary w-full text-lg font-bold shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200"
             onClick={isLoginForm ? handleLogin : handleSignUp}
           >
             {isLoginForm ? "Sign In" : "Create Account"}
           </button>
 
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/10"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              {/* --- UPDATED: 'or' to '// or' --- */}
-              <span className="px-2 bg-gray-900 text-gray-400">// or</span>
-            </div>
-          </div>
+          <div className="divider">or</div>
 
           <p className="text-center">
-            {/* --- UPDATED: Added terminal prompt '❯' --- */}
             <button
               type="button"
-              className="text-gray-400 hover:text-indigo-400 text-lg sm:text-2xl font-medium transition duration-200 underline-offset-4 hover:underline cursor-pointer"
+              className="text-base-content/70 hover:text-primary text-lg sm:text-2xl font-medium transition duration-200 underline-offset-4 hover:underline cursor-pointer"
               onClick={() => setIsLoginForm((value) => !value)}
             >
-              <span className="text-indigo-500">❯ </span>
+              <span className="text-primary">❯ </span>
               {isLoginForm
                 ? "New user? Create an account"
                 : "Already have an account? Sign in"}
